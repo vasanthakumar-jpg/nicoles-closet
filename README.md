@@ -1,4 +1,4 @@
-﻿# Nicole’s Closet — Image-only interactive documentary
+# Nicole’s Closet — Image-only interactive documentary
 
 A React, TypeScript, Vite, Tailwind CSS, and Motion experience using the exact uploaded artwork.
 
@@ -56,10 +56,20 @@ The production static site is in `dist/`. Browser checks use installed Google Ch
 
 ## GitHub Pages deployment
 
-Production builds use `/nicoles-closet/`; local development keeps `/`. Runtime media URLs use Vite’s `BASE_URL`, and HTML favicon/preload links use `%BASE_URL%`, so they resolve under the repository path without renaming or modifying the media.
+Production builds use `/nicoles-closet/`; local development keeps `/`. Runtime media URLs use Vite’s `BASE_URL`, and HTML favicon/preload links use repository-relative URLs, so they resolve under the repository path without renaming or modifying the media.
 
 The workflow `.github/workflows/deploy.yml` runs on every push to `main` and also supports manual runs. It installs Node.js 20, runs `npm ci` and `npm run build`, uploads `dist`, and deploys it using the official GitHub Pages actions.
 
 In the repository’s **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. Commit and push these local changes to `main` to trigger deployment. The intended URL is https://vasanthakumar-jpg.github.io/nicoles-closet/.
 
 To check the production build locally, run `npm run build` followed by `npm run preview`, then open http://127.0.0.1:4173/nicoles-closet/.
+
+### Blank screen: source HTML was published
+
+The source `index.html` contains `/src/main.tsx` and is only an input to Vite. GitHub Pages must serve the `dist/index.html` artifact produced by `npm run build`. Changing media paths alone cannot make the source React/TypeScript entry work on static hosting.
+
+On 26 October 2026, both the custom Vite workflow and GitHub’s default `pages-build-deployment` Jekyll workflow ran for commit `272c91e`. The Jekyll deployment finished after the Vite deployment and the live HTML matched the unbuilt source file. This caused the `main.tsx` and literal `%BASE_URL%` 404s.
+
+The required repository setting is **Settings → Pages → Build and deployment → Source → GitHub Actions**, rather than publishing `main` / `(root)`. After changing the setting, push this fix or manually run **Actions → Deploy to GitHub Pages → Run workflow** on `main`. No `gh-pages` branch, committed `dist`, or source-folder publication is needed.
+
+The deployment workflow now checks this source setting and runs `npm run verify:pages` before uploading only `./dist`. This check rejects source HTML, unexpanded placeholders, missing compiled JavaScript/CSS, incorrect base paths, and missing or changed media. It can also be run locally after `npm run build`.

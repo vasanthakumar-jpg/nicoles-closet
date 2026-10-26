@@ -15,6 +15,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -28,13 +31,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Require GitHub Actions publishing source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pages_build_type=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type')
+          if [ "$pages_build_type" != "workflow" ]; then
+            echo "::error::Set Settings > Pages > Build and deployment > Source to GitHub Actions. Publishing main/root serves unbuilt index.html and overrides the Vite deployment."
+            exit 1
+          fi
+
       - name: Build website
         run: npm run build
+
+      - name: Verify compiled Pages artifact
+        run: npm run verify:pages
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: ./dist
 
   deploy:
     needs: build
