@@ -26,7 +26,7 @@ All eight entries are configured in `src/data/sections.ts`. Just Nikki uses the 
 For an independent image, replace the section’s media object:
 
 ```ts
-media: { type: 'image', src: '/media/jack-duke.jpg' }
+media: { type: 'image', src: `${import.meta.env.BASE_URL}media/jack-duke.jpg` }
 ```
 
 For a video, place the file under `public/media` and use:
@@ -34,8 +34,8 @@ For a video, place the file under `public/media` and use:
 ```ts
 media: {
   type: 'video',
-  src: '/media/jack-duke.mp4',
-  poster: '/media/jack-duke.jpg',
+  src: `${import.meta.env.BASE_URL}media/jack-duke.mp4`,
+  poster: `${import.meta.env.BASE_URL}media/jack-duke.jpg`,
 }
 ```
 
@@ -53,3 +53,13 @@ npm run test:e2e
 The production static site is in `dist/`. Browser checks use installed Google Chrome and cover video autoplay and completion, skip, all eight hotspots, return navigation, history, keyboard access, mobile coordinates, image-only content, and reduced motion.
 
 
+
+## GitHub Pages deployment
+
+Production builds use `/nicoles-closet/`; local development keeps `/`. Runtime media URLs use Vite’s `BASE_URL`, and HTML favicon/preload links use `%BASE_URL%`, so they resolve under the repository path without renaming or modifying the media.
+
+The workflow `.github/workflows/deploy.yml` runs on every push to `main` and also supports manual runs. It installs Node.js 20, runs `npm ci` and `npm run build`, uploads `dist`, and deploys it using the official GitHub Pages actions.
+
+In the repository’s **Settings → Pages → Build and deployment**, select **GitHub Actions** as the source. Commit and push these local changes to `main` to trigger deployment. The intended URL is https://vasanthakumar-jpg.github.io/nicoles-closet/.
+
+To check the production build locally, run `npm run build` followed by `npm run preview`, then open http://127.0.0.1:4173/nicoles-closet/.
