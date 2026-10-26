@@ -1,0 +1,40 @@
+﻿@import 'tailwindcss';
+:root { color-scheme: dark; font-family: Arial, sans-serif; background: #080909; color: #f7f2e8; font-synthesis: none; }
+* { box-sizing: border-box; }
+html,body,#root { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button:focus-visible { outline: 2px solid #efdab0; outline-offset: 5px; }
+button:disabled { cursor: default; }
+.visual-experience { position: relative; width: 100%; height: 100svh; height: 100dvh; overflow: hidden; background: #080909; outline: none; }
+.image-scene { position: absolute; inset: 0; overflow: hidden; background: #080909; }
+.image-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.source-image { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.atrium-image-bounds { position: relative; flex: none; }
+.minimal-control { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 11px 16px; border: 1px solid #f7f2e84a; border-radius: 24px; background: #101311a6; backdrop-filter: blur(12px); font-size: 11px; letter-spacing: .25px; transition: background .2s,border-color .2s; }
+.minimal-control:hover { background: #151914d9; border-color: #e8d6b5a8; }
+.skip-intro { position: absolute; right: max(24px,env(safe-area-inset-right)); bottom: max(24px,env(safe-area-inset-bottom)); z-index: 10; color: #f7f2e8d9; font-size: 10px; }
+/* Targets and markers share the measured, contained image coordinates. */
+.image-hotspot { position: absolute; z-index: 2; border: 0; outline: 1px solid transparent; outline-offset: 0; border-radius: 3px; padding: 0; background: transparent; transition: outline-color .3s,background .3s,box-shadow .3s; }
+.image-hotspot:hover,.image-hotspot:focus-visible,.image-hotspot.selected { outline: 1px solid #f2d69b88; background: #ffe4aa08; box-shadow: inset 0 0 35px #efd29b0d,0 0 22px #c6a56b18; }
+.hotspot-indicator { position: absolute; left: var(--marker-x); top: var(--marker-y); transform: translate(-50%,-50%); height: 24px; width: 24px; border: 1px solid #ffe7bd9c; border-radius: 50%; background: #1017143d; display: grid; place-items: center; box-shadow: 0 0 0 4px #d4b77d13,0 1px 8px #0005; transition: background .3s,box-shadow .3s,transform .3s; pointer-events: none; }
+.hotspot-indicator > span { height: 4px; width: 4px; border-radius: 50%; background: #fff1d2; }
+.image-hotspot:hover .hotspot-indicator,.image-hotspot:focus-visible .hotspot-indicator,.image-hotspot.selected .hotspot-indicator { background: #92703cba; box-shadow: 0 0 0 6px #e0c39120,0 0 25px #e5bd7060; transform: translate(-50%,-50%) scale(1.1); }
+.chapter-crop-bounds { position: relative; flex: none; overflow: hidden; }
+.chapter-crop-image { position: absolute; max-width: none; display: block; }
+.full-chapter-image,.chapter-video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.back-control { position: absolute; z-index: 10; top: max(24px,env(safe-area-inset-top)); left: max(24px,env(safe-area-inset-left)); min-height: 30px; padding: 6px 10px; gap: 5px; font-size: 10px; border-radius: 18px; }
+.back-control svg { width: 14px; height: 14px; }
+@media(max-width:700px) {
+ .hotspot-indicator { width: 20px; height: 20px; box-shadow: 0 0 0 3px #d4b77d13,0 1px 8px #0005; }
+ .hotspot-indicator > span { width: 4px; height: 4px; }
+ .image-hotspot { min-width: 30px; min-height: 44px; }
+ .back-control { top: max(18px,env(safe-area-inset-top)); left: max(18px,env(safe-area-inset-left)); }
+ .skip-intro { bottom: max(18px,env(safe-area-inset-bottom)); right: max(18px,env(safe-area-inset-right)); }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+
+
+.intro-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #080909; }
+.intro-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 64px; height: 64px; border-radius: 50%; }
+
